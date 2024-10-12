@@ -77,6 +77,7 @@ dependencies {
 	//nav
 	implementation ("androidx.navigation:navigation-compose:2.8.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+	implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
 
 
 

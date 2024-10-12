@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -48,7 +50,7 @@ fun ProductRoot(
 	viewModel: ProductViewModel = viewModel()
 ) {
 	//TODO: 1- Observe the state from the ViewModel.
-	val state = viewModel.state.value
+	val state by viewModel.state(ProductScreenState())
 	ProductScreen(state = state, navController = navController){
 		viewModel.onEvent(it)
 	}
@@ -69,27 +71,51 @@ fun ProductScreen(
 
 ) {
 	Column(
-		modifier = Modifier.statusBarsPadding()
-	){
+		modifier = Modifier.padding(10.dp)
+	) {
 		Row(
-			modifier = Modifier.fillMaxWidth()
+			modifier = Modifier
+				.fillMaxWidth()
 				.padding(25.dp),
 			horizontalArrangement = Arrangement.spacedBy(10.dp)
 		) {
 			Button(
 				onClick = {
-					onEvent(ProductsEvent.Order("asc"))
+					onEvent(ProductsEvent.LimitProducts(5))
 				}) {
-				Text(text = "ASD")
+				Text(text = "Show 5")
 			}
 			Button(
 				onClick = {
-					onEvent(ProductsEvent.Order("desc"))
+					onEvent(ProductsEvent.LimitProducts(5))
 				}) {
-				Text(text = "DESC")
+				Text(text = "Show 8")
 			}
 		}
-		// TODO: 1- Add LazyColumn here
+	}
+		Column(
+			modifier = Modifier.statusBarsPadding()
+		){
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(25.dp),
+				horizontalArrangement = Arrangement.spacedBy(10.dp)
+			) {
+				Button(
+					onClick = {
+						onEvent(ProductsEvent.Order("asc"))
+					}) {
+					Text(text = "ASC")
+				}
+				Button(
+					onClick = {
+						onEvent(ProductsEvent.Order("desc"))
+					}) {
+					Text(text = "DESC")
+				}
+			}
+			// TODO: 1- Add LazyColumn here
 		LazyVerticalGrid(
 			columns = GridCells.Fixed(2),
 			modifier = Modifier

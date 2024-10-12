@@ -20,7 +20,7 @@ interface ProductEndPoint {
 	): List<ProductResponse>
 	@GET("products")
 	suspend fun getLimitedProducts(
-		@Query("limit") limit: String
+		@Query("limit") limit: Int
 	):List<ProductResponse>
 }
 

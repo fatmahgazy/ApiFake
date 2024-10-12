@@ -3,7 +3,6 @@ package com.dracula.fakestoreapiexample.domain
 import android.util.Log
 import com.dracula.fakestoreapiexample.api.RetrofitInstance
 import com.dracula.fakestoreapiexample.model.ProductResponse
-import kotlin.jvm.Throws
 
 class ProductRepository {
 	// TODO: Initialize the Retrofit API instance
@@ -44,7 +43,7 @@ class ProductRepository {
 			emptyList()
 		}
 	}
-	suspend fun getLimitedProducts(limit: String): List<ProductResponse>{
+	suspend fun getLimitedProducts(limit: Int): List<ProductResponse>{
 		return try {
 			val response = api.getLimitedProducts(limit)
 			response

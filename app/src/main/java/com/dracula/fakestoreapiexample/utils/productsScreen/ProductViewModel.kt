@@ -44,7 +44,14 @@ class ProductViewModel : ViewModel() {
                is ProductsEvent.Order -> {
                    val response = repo.getSortedItems(event.order)
                    _state.value = state.value.copy(
-                    products = response
+                       products = response
+                   )
+               }
+
+               is ProductsEvent.LimitProducts -> {
+                   val limitedResponse = repo.getLimitedProducts(event.limit)
+                   _state.value = state.value.copy(
+                       products = limitedResponse
                    )
                }
            }
