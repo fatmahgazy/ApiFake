@@ -15,6 +15,8 @@ import androidx.navigation.toRoute
 import com.dracula.fakestoreapiexample.utils.productsScreen.ProductRoot
 import com.dracula.fakestoreapiexample.utils.categoryScreen.CategoriesRoot
 import com.dracula.fakestoreapiexample.ui.theme.FakeStoreApiExampleTheme
+import com.dracula.fakestoreapiexample.user.UserDetails
+import com.dracula.fakestoreapiexample.users.UsersRoot
 import com.dracula.fakestoreapiexample.utils.productsScreen.ProductDetailsScreen
 
 
@@ -49,6 +51,14 @@ class MainActivity : ComponentActivity() {
 								price =routeData.price.toString(),
 								imageUrl = routeData.image
 							)
+						}
+						composable<UsersScreen> {
+						UsersRoot(navController = navController)
+						}
+						composable<UserDetails> {
+							val routeData = it.toRoute<UserDetails>()
+							UserDetails(userId = routeData.id)
+
 						}
 					}
 

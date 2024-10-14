@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -50,7 +50,7 @@ fun ProductRoot(
 	viewModel: ProductViewModel = viewModel()
 ) {
 	//TODO: 1- Observe the state from the ViewModel.
-	val state by viewModel.state(ProductScreenState())
+	val state = viewModel.state.value
 	ProductScreen(state = state, navController = navController){
 		viewModel.onEvent(it)
 	}
@@ -71,12 +71,13 @@ fun ProductScreen(
 
 ) {
 	Column(
-		modifier = Modifier.padding(10.dp)
+		modifier = Modifier
+			.systemBarsPadding()
+			.padding(horizontal = 16.dp, vertical = 16.dp)
 	) {
 		Row(
 			modifier = Modifier
-				.fillMaxWidth()
-				.padding(25.dp),
+				.align(Alignment.CenterHorizontally),
 			horizontalArrangement = Arrangement.spacedBy(10.dp)
 		) {
 			Button(
@@ -87,40 +88,36 @@ fun ProductScreen(
 			}
 			Button(
 				onClick = {
-					onEvent(ProductsEvent.LimitProducts(5))
+					onEvent(ProductsEvent.LimitProducts(8))
 				}) {
 				Text(text = "Show 8")
 			}
 		}
-	}
-		Column(
-			modifier = Modifier.statusBarsPadding()
-		){
-			Row(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(25.dp),
-				horizontalArrangement = Arrangement.spacedBy(10.dp)
-			) {
-				Button(
-					onClick = {
-						onEvent(ProductsEvent.Order("asc"))
-					}) {
-					Text(text = "ASC")
-				}
-				Button(
-					onClick = {
-						onEvent(ProductsEvent.Order("desc"))
-					}) {
-					Text(text = "DESC")
-				}
+		Row(
+			modifier = Modifier
+				.align(Alignment.CenterHorizontally)
+				.padding(top = 10.dp),
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.spacedBy(10.dp)
+		) {
+			Button(
+				onClick = {
+					onEvent(ProductsEvent.Order("asc"))
+				}) {
+				Text(text = "ASC")
 			}
+			Button(
+				onClick = {
+					onEvent(ProductsEvent.Order("desc"))
+				}) {
+				Text(text = "DESC")
+			}
+		}
 			// TODO: 1- Add LazyColumn here
 		LazyVerticalGrid(
 			columns = GridCells.Fixed(2),
 			modifier = Modifier
-				.fillMaxSize(),
-			contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+				.fillMaxSize()
 		) {
 			items(state.products) { product ->
 				ProductItem(

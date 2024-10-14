@@ -4,6 +4,7 @@ import com.dracula.fakestoreapiexample.constants.BASE_URL
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 object RetrofitInstance {
 	// Create an HttpLoggingInterceptor to log HTTP request and response data
@@ -28,5 +29,8 @@ object RetrofitInstance {
 	// Create an implementation of the ProductEndPoint API interface lazily
 	val api: ProductEndPoint by lazy {
 		retrofit.create(ProductEndPoint::class.java) // Create the API implementation
+	}
+	val userApi: UserEndPoint by lazy {
+		retrofit.create(UserEndPoint::class.java)
 	}
 }
