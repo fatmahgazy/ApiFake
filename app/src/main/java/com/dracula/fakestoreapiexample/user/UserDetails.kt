@@ -19,6 +19,7 @@ fun UserDetails(
         viewModel.onEvent(UserEvent.GetUser(userId))
     }
     val state = viewModel.state.value
+    val errorMessage = viewModel.errorMessage.value
     val user = state.user
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -26,25 +27,28 @@ fun UserDetails(
         verticalArrangement = Arrangement.Center
     )
     {
-        user?.let {
-            Text(
-                text = "${it.name.firstName} ${it.name.lastName}"
-            )
-            Text(
-                text = it.email
-            )
-            Text(
-                text = it.password
-            )
-            Text(
-                text = it.phone
-            )
-            Text(
-                text = "${it.address.city}, ${it.address.street}, ${it.address.zipCode}, (${it.address.geolocation}"
-            )
-
-
+            when{
+                user != null -> {
+                    Text(
+                        text = "${user.name.firstName} ${user.name.lastName}"
+                    )
+                    Text(
+                        text = user.email
+                    )
+                    Text(
+                        text = user.password
+                    )
+                    Text(
+                        text = user.phone
+                    )
+                    Text(
+                        text = "${user.address.city}, ${user.address.street}, ${user.address.zipCode}, (${user.address.geolocation}"
+                    )
+                }
+                    errorMessage.isNullOrBlank() -> {
+                        Text(text = errorMessage ?: "")
+                }
+            }
         }
     }
 
-}

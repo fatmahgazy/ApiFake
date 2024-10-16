@@ -33,8 +33,10 @@ fun CategoriesRoot(
     navController: NavController
 ){
      val state = viewModel.state.value
+    val errorMessage = viewModel.errorMessage.value
     CategoryScreen(
         state = state ,
+        errorMessage = errorMessage ?: " " ,
         onClickCategory = {
         navController.navigate(ProductsScreen(category = it))
     },
@@ -47,6 +49,7 @@ fun CategoriesRoot(
 @Composable
 fun CategoryScreen (
     state: CategoriesState,
+    errorMessage: String,
     onClickCategory: (String) -> Unit
 ) {
     LazyColumn(
@@ -54,6 +57,8 @@ fun CategoryScreen (
             .statusBarsPadding()
             .padding(top = 10.dp)
     ) {
+        when{
+            state.categoriesState?.isNotEmpty() == true -> {
         items(state.categoriesState) { category ->
             Card(
                 modifier = Modifier
@@ -73,6 +78,16 @@ fun CategoryScreen (
                 )
             }
         }
+
+        }
+            errorMessage.isNotBlank() -> {
+                item {
+                    Text(
+                        text = errorMessage
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -81,7 +96,8 @@ fun NavButtonUsers(
     onClick: () -> Unit
 ) {
     Column (
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(bottom = 75.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -103,13 +119,5 @@ fun NavButtonUsers(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun CategoryScreenPreview() {
-    CategoryScreen(state = CategoriesState(
-        categoriesState = listOf(
-            "Electronics",
-            "jilewiery",
-        )
-    ),
-        onClickCategory = {}
-    )
 
 }

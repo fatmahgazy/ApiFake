@@ -16,6 +16,9 @@ class ProductViewModel : ViewModel() {
     private val _state = mutableStateOf(ProductScreenState())
     var state : State<ProductScreenState> = _state
 
+    private val _errorMessage = mutableStateOf<String?>(null)
+    var errorState: State<String?> = _errorMessage
+
 	// TODO: Initialize the ViewModel by calling the getProducts function
     init {
         getProducts()
@@ -25,17 +28,26 @@ class ProductViewModel : ViewModel() {
     private fun getProducts(){
         viewModelScope.launch {
             val products = repo.getProducts()
+            if (products.isSuccess)
             _state.value =state.value.copy(
-                products = products
+                products = products.getOrNull()
             )
+            else{
+                _errorMessage.value = products.exceptionOrNull()?.message
+            }
         }
     }
     fun getProductsForCategory(category: String){
         viewModelScope.launch {
             val products = repo.getProductsForCategory(category)
-            _state.value = state.value.copy(
-                products = products
-            )
+            if (products.isSuccess) {
+                _state.value = state.value.copy(
+                    products = products.getOrNull()
+                )
+            }
+            else{
+                _errorMessage.value = products.exceptionOrNull()?.message
+            }
         }
     }
    fun onEvent(event: ProductsEvent){
@@ -43,16 +55,25 @@ class ProductViewModel : ViewModel() {
            when(event) {
                is ProductsEvent.Order -> {
                    val response = repo.getSortedItems(event.order)
-                   _state.value = state.value.copy(
-                       products = response
-                   )
+                   if (response.isSuccess) {
+                       _state.value = state.value.copy(
+                           products = response.getOrNull()
+                       )
+                   } else {
+                       _errorMessage.value = response.exceptionOrNull()?.message
+                   }
                }
 
                is ProductsEvent.LimitProducts -> {
                    val limitedResponse = repo.getLimitedProducts(event.limit)
-                   _state.value = state.value.copy(
-                       products = limitedResponse
-                   )
+                   if (limitedResponse.isSuccess) {
+                       _state.value = state.value.copy(
+                           products = limitedResponse.getOrNull()
+                       )
+                   }
+                   else{
+                       _errorMessage.value = limitedResponse.exceptionOrNull()?.message
+                   }
                }
            }
        }

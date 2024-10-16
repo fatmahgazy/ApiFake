@@ -7,49 +7,49 @@ import com.dracula.fakestoreapiexample.model.UserResponse
 class UserRepository {
     private val userApi = RetrofitInstance.userApi
 
-    suspend fun getAllUsers(): List<UserResponse>{
+    suspend fun getAllUsers(): Result<List<UserResponse>>{
         return try {
             val userResponse = userApi.getUsers()
-             userResponse
+             Result.success(userResponse)
         }catch (t: Throwable){
-            emptyList()
+            Result.failure(t)
         }
 
     }
-    suspend fun getUserById(id: String): UserResponse?{
+    suspend fun getUserById(id: String): Result<UserResponse?>{
         return try {
             val response = userApi.getUserById(id)
-            response
+            Result.success(response)
         }catch (t: Throwable){
-            null
+            Result.failure(t)
         }
     }
-    suspend fun getLimitedUser(userLimited: String): List<UserResponse>{
+    suspend fun getLimitedUser(userLimited: String): Result<List<UserResponse>>{
         return try {
             val limitResponse = userApi.getLimitedUser(userLimited)
-            limitResponse
+            Result.success(limitResponse)
         }
         catch (t: Throwable){
-            emptyList()
+            Result.failure(t)
         }
     }
-    suspend fun getSortedUser(id: String): List<UserResponse>{
+    suspend fun getSortedUser(id: String): Result<List<UserResponse>>{
         return try {
             val response = userApi.getSortedUser(id)
-            response
+            Result.success(response)
         }
         catch (t: Throwable){
-            emptyList()
+           Result.failure(t)
         }
 
     }
-    suspend fun deleteUserById(id: String): Boolean{
+    suspend fun deleteUserById(id: String): Result<Boolean>{
         return try {
             val response = userApi.deleteUserById(id)
-            response
+            Result.success(response)
         }
         catch (t: Throwable){
-            false
+            Result.failure(t)
         }
 
     }

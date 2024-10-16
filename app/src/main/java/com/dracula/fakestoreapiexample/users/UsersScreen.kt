@@ -44,7 +44,8 @@ fun UsersRoot(
     viewModel: UsersViewModel = viewModel()
 ) {
     val state = viewModel.state.value
-    UsersScreen(state = state, navController = navController){
+    val errorMessage = viewModel.errorMessage.value
+    UsersScreen(state = state, errorMessage = errorMessage ?: "", navController = navController){
         viewModel.onEvent(it)
     }
 }
@@ -52,6 +53,7 @@ fun UsersRoot(
 fun UsersScreen(
     navController: NavController,
     state: UsersState,
+    errorMessage: String,
     onEvent: (UsersEvent) -> Unit
 ) {
     Column(
@@ -74,16 +76,16 @@ fun UsersScreen(
                     text = "Show 5"
                 )
             }
-                Button(
-                    onClick = {
-                        onEvent(UsersEvent.OrderLimitedUsers("8"))
-                    }
-                ) {
-                    Text(
-                        text = "Show 8"
-                    )
+            Button(
+                onClick = {
+                    onEvent(UsersEvent.OrderLimitedUsers("8"))
                 }
+            ) {
+                Text(
+                    text = "Show 8"
+                )
             }
+        }
         Spacer(modifier = Modifier.height(10.dp))
         Row(
             modifier = Modifier,
@@ -100,7 +102,7 @@ fun UsersScreen(
             }
             Button(
                 onClick = {
-            onEvent(UsersEvent.OrderType("desc"))
+                    onEvent(UsersEvent.OrderType("desc"))
                 }
             ) {
                 Text(
@@ -115,19 +117,31 @@ fun UsersScreen(
                 .padding(top = 20.dp),
             contentPadding = PaddingValues(horizontal = 25.dp)
         ) {
-            items(state.users) { user ->
-                UsersItems(
-                    user = user,
-                    onClick = {
-                        navController.navigate(UserDetails(id = user.id))
-                    },
-                    {
-                        onEvent(UsersEvent.DeleteUser(id = user.id))
-                    }
-                )
+            when {
+                state.users?.isNotEmpty() == true -> {
+                    items(state.users) { user ->
+                        UsersItems(
+                            user = user,
+                            onClick = {
+                                navController.navigate(UserDetails(id = user.id))
+                            },
+                            {
+                                onEvent(UsersEvent.DeleteUser(id = user.id))
+                            }
+                        )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+                errorMessage.isNotBlank() -> {
+                    item {
+                        Text(
+                            text = errorMessage
+                        )
+                    }
             }
+
+        }
         }
     }
 }
@@ -175,7 +189,7 @@ fun UsersItems(user: UserResponse , onClick: () -> Unit , deleteOnClick: () -> U
                 imageVector = Icons.Default.Delete,
                 contentDescription = "",
                         modifier = Modifier
-                        .size(50.dp)
+                            .size(50.dp)
                             .clickable {
                                 deleteOnClick()
                             }

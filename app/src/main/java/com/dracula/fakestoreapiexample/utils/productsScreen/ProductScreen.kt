@@ -51,7 +51,8 @@ fun ProductRoot(
 ) {
 	//TODO: 1- Observe the state from the ViewModel.
 	val state = viewModel.state.value
-	ProductScreen(state = state, navController = navController){
+	val errorMessage = viewModel.errorState.value
+	ProductScreen(state = state, errorMessage = errorMessage ?: "", navController = navController){
 		viewModel.onEvent(it)
 	}
 
@@ -67,6 +68,7 @@ fun ProductRoot(
 fun ProductScreen(
 	navController: NavController,
 	state: ProductScreenState,
+	errorMessage: String,
 	onEvent: (ProductsEvent) -> Unit
 
 ) {
@@ -119,21 +121,38 @@ fun ProductScreen(
 			modifier = Modifier
 				.fillMaxSize()
 		) {
-			items(state.products) { product ->
-				ProductItem(
-					product = product,
-					onClick = {
-						navController.navigate(
-							ProductDetails(
-								title = product.title,
-								description = product.description,
-								image = product.image,
-								price = product.price.toString()
-							)
+				when{
+					state.products?.isNotEmpty() == true -> {
+					items(state.products) { product ->
+						ProductItem(
+							product = product,
+							onClick = {
+								navController.navigate(
+									ProductDetails(
+										title = product.title,
+										description = product.description,
+										image = product.image,
+										price = product.price.toString()
+									)
+								)
+							}
 						)
 					}
-				)
+				}
+				errorMessage.isNotBlank() -> {
+					item {
+						Text(
+							text = errorMessage
+						)
+					}
+				}
+					else ->{
+						item {
+							Text(text = "No products found")
+						}
+					}
 			}
+
 		}
 	}
 }

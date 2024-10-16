@@ -13,16 +13,24 @@ class UserByIdViewModel: ViewModel() {
     private val _state = mutableStateOf(UserState())
     var state: State<UserState> = _state
 
+    private val _errorMessage = mutableStateOf<String?>(null)
+    var errorMessage: State<String?> = _errorMessage
+
     fun onEvent(event: UserEvent) {
         viewModelScope.launch {
             when (event) {
-            is UserEvent.GetUser -> {
-               val user =  repo.getUserById(event.id)
-                _state.value = state.value.copy(
-                    user = user
-                )
-            }
+                is UserEvent.GetUser -> {
+                    val user = repo.getUserById(event.id)
+                    if (user.isSuccess) {
+                        _state.value = state.value.copy(
+                            user = user.getOrNull()
+                        )
+                    }
+                    else{
+                        _errorMessage.value = user.exceptionOrNull()?.message
+                    }
 
+                }
             }
     }
 
