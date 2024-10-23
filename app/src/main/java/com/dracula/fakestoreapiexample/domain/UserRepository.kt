@@ -3,6 +3,8 @@ package com.dracula.fakestoreapiexample.domain
 import android.util.Log
 import com.dracula.fakestoreapiexample.api.RetrofitInstance
 import com.dracula.fakestoreapiexample.model.UserResponse
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class UserRepository {
     private val userApi = RetrofitInstance.userApi
@@ -12,7 +14,17 @@ class UserRepository {
             val userResponse = userApi.getUsers()
              Result.success(userResponse)
         }catch (t: Throwable){
-            Result.failure(t)
+            when(t){
+                is UnknownHostException ->{
+                    Result.failure(Exception("UnknownException"))
+                }
+                is SocketTimeoutException ->{
+                    Result.failure(Exception("SocketTimeOutException"))
+                }
+                else -> {
+                    Result.failure(t)
+                }
+            }
         }
 
     }
@@ -21,7 +33,17 @@ class UserRepository {
             val response = userApi.getUserById(id)
             Result.success(response)
         }catch (t: Throwable){
-            Result.failure(t)
+            when(t){
+                is UnknownHostException ->{
+                    Result.failure(Exception("UnknownException"))
+                }
+                is SocketTimeoutException ->{
+                    Result.failure(Exception("SocketException"))
+                }
+                else -> {
+                Result.failure(t)
+                }
+            }
         }
     }
     suspend fun getLimitedUser(userLimited: String): Result<List<UserResponse>>{
@@ -30,7 +52,18 @@ class UserRepository {
             Result.success(limitResponse)
         }
         catch (t: Throwable){
-            Result.failure(t)
+            when(t){
+                is UnknownHostException -> {
+                    Result.failure(Exception("UnknownException"))
+                }
+                is SocketTimeoutException -> {
+                    Result.failure(Exception("SocketTimOutException"))
+                }
+                else -> {
+                    Result.failure(t)
+                }
+            }
+
         }
     }
     suspend fun getSortedUser(id: String): Result<List<UserResponse>>{
@@ -39,7 +72,17 @@ class UserRepository {
             Result.success(response)
         }
         catch (t: Throwable){
-           Result.failure(t)
+            when(t){
+                is UnknownHostException -> {
+                    Result.failure(Exception("UnknownException"))
+                }
+                is SocketTimeoutException -> {
+                    Result.failure(Exception("SocketTimeOutException"))
+                }
+                else -> {
+                    Result.failure(Exception(t))
+                }
+            }
         }
 
     }
@@ -49,7 +92,18 @@ class UserRepository {
             Result.success(response)
         }
         catch (t: Throwable){
-            Result.failure(t)
+            when(t){
+                is UnknownHostException -> {
+                    Result.failure(Exception("UnknownException"))
+                }
+                is SocketTimeoutException -> {
+                    Result.failure(Exception("SocketTimeOutException"))
+                }
+                else -> {
+                    Result.failure(Exception(t))
+                }
+            }
+
         }
 
     }

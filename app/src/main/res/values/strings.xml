@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FakeStoreApiExample</string>
+    <string name="unknown_exception_msg">No int</string>
 </resources>
