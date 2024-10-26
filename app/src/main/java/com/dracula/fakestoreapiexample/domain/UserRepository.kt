@@ -1,110 +1,112 @@
 package com.dracula.fakestoreapiexample.domain
 
 import android.util.Log
+import com.dracula.fakestoreapiexample.R
+import com.dracula.fakestoreapiexample.ResultStates.ResultWrapper
+import com.dracula.fakestoreapiexample.ResultStates.UiText
 import com.dracula.fakestoreapiexample.api.RetrofitInstance
 import com.dracula.fakestoreapiexample.model.UserResponse
+import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class UserRepository {
     private val userApi = RetrofitInstance.userApi
 
-    suspend fun getAllUsers(): Result<List<UserResponse>>{
+    suspend fun getAllUsers(): ResultWrapper<List<UserResponse>>{
         return try {
             val userResponse = userApi.getUsers()
-             Result.success(userResponse)
+             ResultWrapper.Success(userResponse)
         }catch (t: Throwable){
             when(t){
                 is UnknownHostException ->{
-                    Result.failure(Exception("UnknownException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.unknown_exception_msg))
                 }
                 is SocketTimeoutException ->{
-                    Result.failure(Exception("SocketTimeOutException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.Timeout_Exception))
                 }
                 else -> {
-                    Result.failure(t)
+                    ResultWrapper.Error(UiText.DynamicText("${t.message}"))
                 }
             }
         }
 
     }
-    suspend fun getUserById(id: String): Result<UserResponse?>{
+    suspend fun getUserById(id: String): ResultWrapper<UserResponse?>{
         return try {
             val response = userApi.getUserById(id)
-            Result.success(response)
+            ResultWrapper.Success(response)
         }catch (t: Throwable){
             when(t){
                 is UnknownHostException ->{
-                    Result.failure(Exception("UnknownException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.unknown_exception_msg))
                 }
                 is SocketTimeoutException ->{
-                    Result.failure(Exception("SocketException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.Timeout_Exception))
                 }
                 else -> {
-                Result.failure(t)
+                ResultWrapper.Error(UiText.DynamicText("${t.message}"))
                 }
             }
         }
     }
-    suspend fun getLimitedUser(userLimited: String): Result<List<UserResponse>>{
+    suspend fun getLimitedUser(userLimited: String): ResultWrapper<List<UserResponse>>{
         return try {
             val limitResponse = userApi.getLimitedUser(userLimited)
-            Result.success(limitResponse)
+            ResultWrapper.Success(limitResponse)
         }
         catch (t: Throwable){
             when(t){
                 is UnknownHostException -> {
-                    Result.failure(Exception("UnknownException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.unknown_exception_msg))
                 }
                 is SocketTimeoutException -> {
-                    Result.failure(Exception("SocketTimOutException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.Timeout_Exception))
                 }
                 else -> {
-                    Result.failure(t)
+                    ResultWrapper.Error(UiText.DynamicText("${t.message}"))
                 }
             }
 
         }
     }
-    suspend fun getSortedUser(id: String): Result<List<UserResponse>>{
+    suspend fun getSortedUser(id: String): ResultWrapper<List<UserResponse>>{
         return try {
             val response = userApi.getSortedUser(id)
-            Result.success(response)
+            ResultWrapper.Success(response)
         }
         catch (t: Throwable){
             when(t){
                 is UnknownHostException -> {
-                    Result.failure(Exception("UnknownException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.unknown_exception_msg))
                 }
                 is SocketTimeoutException -> {
-                    Result.failure(Exception("SocketTimeOutException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.Timeout_Exception))
                 }
                 else -> {
-                    Result.failure(Exception(t))
+                    ResultWrapper.Error(UiText.DynamicText("${t.message}"))
                 }
             }
         }
 
     }
-    suspend fun deleteUserById(id: String): Result<Boolean>{
+    suspend fun deleteUserById(id: String): ResultWrapper<List<UserResponse>>{
         return try {
             val response = userApi.deleteUserById(id)
-            Result.success(response)
+            ResultWrapper.Success(response)
         }
         catch (t: Throwable){
             when(t){
                 is UnknownHostException -> {
-                    Result.failure(Exception("UnknownException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.unknown_exception_msg))
                 }
                 is SocketTimeoutException -> {
-                    Result.failure(Exception("SocketTimeOutException"))
+                    ResultWrapper.Error(UiText.StringResource(R.string.Timeout_Exception))
                 }
                 else -> {
-                    Result.failure(Exception(t))
+                    ResultWrapper.Error(UiText.DynamicText("${t.message}"))
                 }
             }
-
         }
-
     }
 }

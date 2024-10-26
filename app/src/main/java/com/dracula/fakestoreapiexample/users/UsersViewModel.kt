@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dracula.fakestoreapiexample.ResultStates.ResultWrapper
+import com.dracula.fakestoreapiexample.ResultStates.UiText
 import com.dracula.fakestoreapiexample.domain.UserRepository
 import com.dracula.fakestoreapiexample.user.UserEvent
 import kotlinx.coroutines.launch
@@ -14,8 +16,8 @@ class UsersViewModel: ViewModel() {
     private val _state = mutableStateOf(UsersState())
     var state: State<UsersState> = _state
 
-    private val _errorMessage = mutableStateOf<String?>(null)
-    var errorMessage: State<String?> = _errorMessage
+    private val _errorMessage = mutableStateOf<UiText?>(null)
+    var errorMessage: State<UiText?> = _errorMessage
 
     init {
         getAllUser()
@@ -23,14 +25,13 @@ class UsersViewModel: ViewModel() {
 
     private fun getAllUser() {
         viewModelScope.launch {
-            val user = userRepo.getAllUsers()
-            if (user.isSuccess) {
-                _state.value = state.value.copy(
-                    users = user.getOrNull()
-                )
-            } else {
-                _errorMessage.value = user.exceptionOrNull()?.message
-            }
+            val userResponse = userRepo.getAllUsers()
+           when(userResponse){
+               is ResultWrapper.Success -> _state.value = state.value.copy(
+                   users = userResponse.data
+               )
+               is ResultWrapper.Error -> _errorMessage.value = userResponse.error
+           }
         }
     }
         fun onEvent(event: UsersEvent) {
@@ -38,37 +39,32 @@ class UsersViewModel: ViewModel() {
                 when (event) {
                     is UsersEvent.OrderLimitedUsers -> {
                         val response = userRepo.getLimitedUser(event.limit)
-                        if (response.isSuccess) {
-                            _state.value = state.value.copy(
-                                users = response.getOrNull()
-                            )
-                        } else {
-                            _errorMessage.value = response.exceptionOrNull()?.message
-                        }
-                    }
+                       when(response){
+                           is ResultWrapper.Success -> _state.value = state.value.copy(
+                               users = response.data
+                           )
+                           is ResultWrapper.Error -> _errorMessage.value = response.error
+
+                       }                       }
 
                     is UsersEvent.OrderType -> {
                         val sortedUsers = userRepo.getSortedUser(event.orderType)
-                        if (sortedUsers.isSuccess) {
-                            _state.value = state.value.copy(
-                                users = sortedUsers.getOrNull()
-                            )
-                        } else {
-                            _errorMessage.value = sortedUsers.exceptionOrNull()?.message
-                        }
+                      when(sortedUsers){
+                          is ResultWrapper.Success -> _state.value = state.value.copy(
+                              users = sortedUsers.data
+                          )
+                          is ResultWrapper.Error -> _errorMessage.value = sortedUsers.error
+                      }
                     }
 
                     is UsersEvent.DeleteUser -> {
                         val deleteUser = userRepo.deleteUserById(event.id)
-                        if (deleteUser.isSuccess) {
-                            _state.value = state.value.copy(
-                                users = state.value.users?.filter {
-                                    it.id != event.id
-                                }
-                            )
-                        } else {
-                            _errorMessage.value = deleteUser.exceptionOrNull()?.message
-                        }
+                      when(deleteUser){
+                          is ResultWrapper.Success -> _state.value = state.value.copy(
+                              users = deleteUser.data
+                          )
+                          is ResultWrapper.Error -> _errorMessage.value = deleteUser.error
+                      }
                     }
                 }
             }

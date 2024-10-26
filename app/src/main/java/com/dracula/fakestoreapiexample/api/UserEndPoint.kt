@@ -27,5 +27,5 @@ interface UserEndPoint {
     @DELETE("users/{id}")
     suspend fun deleteUserById(
         @Path("id") id: String
-    ): Boolean
+    ):List<UserResponse>
 }

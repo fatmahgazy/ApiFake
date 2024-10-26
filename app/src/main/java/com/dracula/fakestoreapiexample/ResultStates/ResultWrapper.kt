@@ -1,7 +1,6 @@
 package com.dracula.fakestoreapiexample.ResultStates
 
-sealed class ResultWrapper<T> {
+sealed class ResultWrapper<out T> {
     data class Success<T>(val data: T): ResultWrapper<T>()
-    data class Error(val error: Exception): ResultWrapper<Nothing>()
-    object Loading: ResultWrapper<Nothing>()
+    data class Error(val error: UiText): ResultWrapper<Nothing>()
 }

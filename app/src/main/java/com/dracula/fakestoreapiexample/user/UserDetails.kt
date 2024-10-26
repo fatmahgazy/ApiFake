@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
@@ -19,6 +20,7 @@ fun UserDetails(
         viewModel.onEvent(UserEvent.GetUser(userId))
     }
     val state = viewModel.state.value
+    val context = LocalContext.current
     val errorMessage = viewModel.errorMessage.value
     val user = state.user
     Column (
@@ -45,10 +47,7 @@ fun UserDetails(
                         text = "${user.address.city}, ${user.address.street}, ${user.address.zipCode}, (${user.address.geolocation}"
                     )
                 }
-                    errorMessage.isNullOrBlank() -> {
-                        Text(text = errorMessage ?: "")
                 }
-            }
         }
     }
 

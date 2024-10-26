@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dracula.fakestoreapiexample.ResultStates.ResultWrapper
+import com.dracula.fakestoreapiexample.ResultStates.UiText
 import com.dracula.fakestoreapiexample.domain.ProductRepository
 import kotlinx.coroutines.launch
 
@@ -16,8 +18,8 @@ class ProductViewModel : ViewModel() {
     private val _state = mutableStateOf(ProductScreenState())
     var state : State<ProductScreenState> = _state
 
-    private val _errorMessage = mutableStateOf<String?>(null)
-    var errorState: State<String?> = _errorMessage
+    private val _errorMessage = mutableStateOf<UiText?>(null)
+    var errorState: State<UiText?> = _errorMessage
 
 	// TODO: Initialize the ViewModel by calling the getProducts function
     init {
@@ -28,25 +30,23 @@ class ProductViewModel : ViewModel() {
     private fun getProducts(){
         viewModelScope.launch {
             val products = repo.getProducts()
-            if (products.isSuccess)
-            _state.value =state.value.copy(
-                products = products.getOrNull()
-            )
-            else{
-                _errorMessage.value = products.exceptionOrNull()?.message
+            when(products){
+                is ResultWrapper.Error ->  _errorMessage.value = products.error
+                is ResultWrapper.Success -> _state.value =state.value.copy(
+                    products = products.data
+                )
             }
         }
     }
     fun getProductsForCategory(category: String){
         viewModelScope.launch {
             val products = repo.getProductsForCategory(category)
-            if (products.isSuccess) {
-                _state.value = state.value.copy(
-                    products = products.getOrNull()
+            when(products) {
+                is ResultWrapper.Success -> _state.value = state.value.copy(
+                    products = products.data
                 )
-            }
-            else{
-                _errorMessage.value = products.exceptionOrNull()?.message
+                is ResultWrapper.Error ->
+                    _errorMessage.value = products.error
             }
         }
     }
@@ -55,24 +55,21 @@ class ProductViewModel : ViewModel() {
            when(event) {
                is ProductsEvent.Order -> {
                    val response = repo.getSortedItems(event.order)
-                   if (response.isSuccess) {
-                       _state.value = state.value.copy(
-                           products = response.getOrNull()
-                       )
-                   } else {
-                       _errorMessage.value = response.exceptionOrNull()?.message
-                   }
+                 when(response){
+                      is ResultWrapper.Success -> _state.value = state.value.copy(
+                         products = response.data
+                     )
+                     is ResultWrapper.Error -> _errorMessage.value = response.error
+                 }
                }
 
                is ProductsEvent.LimitProducts -> {
                    val limitedResponse = repo.getLimitedProducts(event.limit)
-                   if (limitedResponse.isSuccess) {
-                       _state.value = state.value.copy(
-                           products = limitedResponse.getOrNull()
+                   when(limitedResponse){
+                       is ResultWrapper.Success -> _state.value = state.value.copy(
+                           products = limitedResponse.data
                        )
-                   }
-                   else{
-                       _errorMessage.value = limitedResponse.exceptionOrNull()?.message
+                       is ResultWrapper.Error -> _errorMessage.value = limitedResponse.error
                    }
                }
            }

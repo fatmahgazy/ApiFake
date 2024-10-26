@@ -30,13 +30,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.dracula.fakestoreapiexample.R
 import com.dracula.fakestoreapiexample.model.UserResponse
 import com.dracula.fakestoreapiexample.utils.UserDetails
-import kotlinx.serialization.json.Json
-import java.nio.file.WatchEvent
+
 
 @Composable
 fun UsersRoot(
@@ -45,7 +47,8 @@ fun UsersRoot(
 ) {
     val state = viewModel.state.value
     val errorMessage = viewModel.errorMessage.value
-    UsersScreen(state = state, errorMessage = errorMessage ?: "", navController = navController){
+    val context = LocalContext.current
+    UsersScreen(state = state, errorMessage = errorMessage?.asString(context) ?: "", navController = navController){
         viewModel.onEvent(it)
     }
 }
@@ -73,7 +76,7 @@ fun UsersScreen(
                 }
             ) {
                 Text(
-                    text = "Show 5"
+                    text = stringResource(id = R.string.show_5)
                 )
             }
             Button(
@@ -82,7 +85,7 @@ fun UsersScreen(
                 }
             ) {
                 Text(
-                    text = "Show 8"
+                    text =  stringResource(id = R.string.show_8)
                 )
             }
         }
@@ -97,7 +100,7 @@ fun UsersScreen(
                 }
             ) {
                 Text(
-                    text = "ASC"
+                    text = stringResource(id = R.string.asc)
                 )
             }
             Button(
@@ -106,7 +109,7 @@ fun UsersScreen(
                 }
             ) {
                 Text(
-                    text = "DESC"
+                    text = stringResource(id = R.string.DESC)
                 )
             }
         }

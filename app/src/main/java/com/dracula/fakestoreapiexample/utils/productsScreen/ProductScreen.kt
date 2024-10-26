@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,8 +52,9 @@ fun ProductRoot(
 ) {
 	//TODO: 1- Observe the state from the ViewModel.
 	val state = viewModel.state.value
+	val context = LocalContext.current
 	val errorMessage = viewModel.errorState.value
-	ProductScreen(state = state, errorMessage = errorMessage ?: "", navController = navController){
+	ProductScreen(state = state, errorMessage = (errorMessage ?: "").toString(), navController = navController){
 		viewModel.onEvent(it)
 	}
 
@@ -86,13 +88,13 @@ fun ProductScreen(
 				onClick = {
 					onEvent(ProductsEvent.LimitProducts(5))
 				}) {
-				Text(text = "Show 5")
+				Text(text = stringResource(id = R.string.show_5))
 			}
 			Button(
 				onClick = {
 					onEvent(ProductsEvent.LimitProducts(8))
 				}) {
-				Text(text = "Show 8")
+				Text(text = stringResource(id = R.string.show_8))
 			}
 		}
 		Row(
@@ -106,13 +108,13 @@ fun ProductScreen(
 				onClick = {
 					onEvent(ProductsEvent.Order("asc"))
 				}) {
-				Text(text = "ASC")
+				Text(text = stringResource(id = R.string.asc))
 			}
 			Button(
 				onClick = {
 					onEvent(ProductsEvent.Order("desc"))
 				}) {
-				Text(text = "DESC")
+				Text(text = stringResource(id = R.string.DESC))
 			}
 		}
 			// TODO: 1- Add LazyColumn here
@@ -148,7 +150,7 @@ fun ProductScreen(
 				}
 					else ->{
 						item {
-							Text(text = "No products found")
+							Text(text = stringResource(id = R.string.no_product))
 						}
 					}
 			}

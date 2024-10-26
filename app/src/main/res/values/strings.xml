@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">FakeStoreApiExample</string>
     <string name="unknown_exception_msg">No int</string>
+    <string name="show_5">Show 5</string>
+    <string name="show_8">Show 8</string>
+    <string name="asc">ASC</string>
+    <string name="DESC">DESC</string>
+    <string name="no_product">No products found</string>
+    <string name="click">Click</string>
+    <string name="Timeout_Exception">SocketTimeoutException</string>
 </resources>
