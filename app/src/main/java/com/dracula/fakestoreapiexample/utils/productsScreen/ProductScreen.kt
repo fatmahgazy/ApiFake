@@ -54,7 +54,11 @@ fun ProductRoot(
 	val state = viewModel.state.value
 	val context = LocalContext.current
 	val errorMessage = viewModel.errorState.value
-	ProductScreen(state = state, errorMessage = (errorMessage ?: "").toString(), navController = navController){
+	ProductScreen(
+		state = state,
+		errorMessage = (errorMessage ?: "").toString(),
+		navController = navController
+	){
 		viewModel.onEvent(it)
 	}
 
@@ -72,7 +76,6 @@ fun ProductScreen(
 	state: ProductScreenState,
 	errorMessage: String,
 	onEvent: (ProductsEvent) -> Unit
-
 ) {
 	Column(
 		modifier = Modifier
@@ -87,13 +90,15 @@ fun ProductScreen(
 			Button(
 				onClick = {
 					onEvent(ProductsEvent.LimitProducts(5))
-				}) {
+				},
+			) {
 				Text(text = stringResource(id = R.string.show_5))
 			}
 			Button(
 				onClick = {
 					onEvent(ProductsEvent.LimitProducts(8))
-				}) {
+				},
+			) {
 				Text(text = stringResource(id = R.string.show_8))
 			}
 		}

@@ -5,8 +5,11 @@ import com.dracula.fakestoreapiexample.ResultStates.ResultWrapper
 import com.dracula.fakestoreapiexample.ResultStates.UiText
 import com.dracula.fakestoreapiexample.api.RetrofitInstance
 import com.dracula.fakestoreapiexample.model.ProductResponse
+import com.dracula.fakestoreapiexample.utils.safeApiCall
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+
+
 
 class ProductRepository {
     // TODO: Initialize the Retrofit API instance
@@ -37,23 +40,8 @@ class ProductRepository {
     }
 
     suspend fun getCategories(): ResultWrapper<List<String>> {
-        return try {
-            val responseCategories = api.getCategories()
-            ResultWrapper.Success(responseCategories)
-        } catch (e: Exception) {
-            when (e) {
-                is UnknownHostException -> {
-                    ResultWrapper.Error(UiText.StringResource(R.string.unknown_exception_msg))
-                }
-
-                is SocketTimeoutException -> {
-                    ResultWrapper.Error(UiText.StringResource(R.string.Timeout_Exception))
-                }
-
-                else -> {
-                    ResultWrapper.Error(UiText.DynamicText("${e.message}"))
-                }
-            }
+        return safeApiCall {
+            api.getCategories()
         }
     }
 

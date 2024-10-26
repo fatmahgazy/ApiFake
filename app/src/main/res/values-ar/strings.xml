@@ -1,11 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FakeStoreApiExample</string>
-    <string name="unknown_exception_msg">No int</string>
-    <string name="show_5"> اظهر لي خمس</string>
-    <string name="show_8">اطهر لي ثمانيه</string>
-    <string name="asc">تصاعدي</string>
-    <string name="DESC">تنازلي</string>
-    <string name="no_product">لا يوجد </string>
-    <string name="click">اضغط</string>
-    <string name="Timeout_Exception">تايم اوت اكسيبشن</string>
+    <string name="unknown_exception_msg">No internet connection</string>
 </resources>
